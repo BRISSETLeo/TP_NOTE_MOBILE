@@ -56,21 +56,32 @@ class _BoardState extends State<Board> {
       setState(() {
         grid[row][col] = currentPlayer;
         if (checkWinner()) {
-          context
-              .read<SettingViewModel>()
-              .addScore(context.read<SettingViewModel>().pseudos, 10, 1);
+          int nbCoupsJoueForX = 0;
+          for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+              if (grid[i][j] == 'X') {
+                nbCoupsJoueForX++;
+              }
+            }
+          }
+          context.read<SettingViewModel>().addScore(
+              context.read<SettingViewModel>().pseudos,
+              "Morpion",
+              currentPlayer == 'X'
+                  ? "Gagné (en $nbCoupsJoueForX coup(s))"
+                  : "Perdu (en $nbCoupsJoueForX coup(s))");
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Winner'),
-              content: Text('Player $currentPlayer wins!'),
+              title: const Text('Gagnant'),
+              content: Text('Gagnant: $currentPlayer !'),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     initializeGame();
                   },
-                  child: const Text('Play Again'),
+                  child: const Text('Jouer encore'),
                 ),
                 TextButton(
                   onPressed: () {
@@ -86,18 +97,30 @@ class _BoardState extends State<Board> {
             ),
           );
         } else if (!grid.any((row) => row.contains(''))) {
+          context.read<SettingViewModel>().addScore(
+              context.read<SettingViewModel>().pseudos, "Morpion", "Egalité");
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Draw'),
-              content: const Text('It\'s a draw!'),
+              title: const Text('Egalité'),
+              content: const Text("Match nul !"),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                     initializeGame();
                   },
-                  child: const Text('Play Again'),
+                  child: const Text('Jouer encore'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Home()),
+                        (route) => false);
+                  },
+                  child: const Text('Retour'),
                 )
               ],
             ),

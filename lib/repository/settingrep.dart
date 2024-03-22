@@ -15,12 +15,17 @@ class SettingRepository {
     sharedPreferences.setString(PSEUDO_KEY, value);
   }
 
-  saveSettingsScore(String pseudo, int score, int level) async {
+  saveSettingsScore(String pseudo, String score, String level) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setStringList("score", [
       "$pseudo:$score:$level",
       ...sharedPreferences.getStringList("score") ?? []
     ]);
+  }
+
+  clearSettingsScore() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.remove("score");
   }
 
   Future<List<String>> getSettingsScore() async {

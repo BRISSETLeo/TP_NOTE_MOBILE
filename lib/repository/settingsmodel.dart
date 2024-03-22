@@ -17,7 +17,7 @@ class SettingViewModel extends ChangeNotifier {
     getSettingsPseudo();
     getSettingsScore();
   }
-//Switching the themes
+
   set isDark(bool value) {
     _isDark = value;
     _settingRepository.saveSettingsDark(value);
@@ -30,7 +30,7 @@ class SettingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  addScore(String pseudo, int score, int level) {
+  addScore(String pseudo, String score, String level) {
     _score.add("$pseudo:$score:$level");
     _settingRepository.saveSettingsScore(pseudo, score, level);
     notifyListeners();
