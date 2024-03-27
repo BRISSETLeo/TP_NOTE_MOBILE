@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:td2_flutter/repository/settingsmodel.dart';
 import 'package:td2_flutter/ui/card3.dart';
+import 'package:td2_flutter/ui/card4.dart';
 
 class Ecran2 extends StatelessWidget {
   const Ecran2({super.key});
@@ -34,6 +35,9 @@ class _FormWidgetState extends State<FormWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final niveauJeuMorpion = context.read<SettingViewModel>().niveauJeuMorpion;
+    final niveauJeuPuissance4 =
+        context.read<SettingViewModel>().niveauJeuPuissance4;
     return Form(
       key: _formKey,
       child: Column(
@@ -68,6 +72,27 @@ class _FormWidgetState extends State<FormWidget> {
               }
             },
             child: const Text('Commencer la partie'),
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const Ecran4()));
+              },
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(16),
+              ),
+              child: const Text('Niveaux', style: TextStyle(fontSize: 30)),
+            ),
+          ),
+          Text(
+            "Niveau choisi pour le morpion: $niveauJeuMorpion",
+            style: const TextStyle(fontSize: 20),
+          ),
+          Text(
+            "Niveau choisi pour le puissance 4: $niveauJeuPuissance4",
+            style: const TextStyle(fontSize: 20),
           ),
         ],
       ),

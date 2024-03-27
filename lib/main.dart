@@ -3,7 +3,6 @@ import 'package:td2_flutter/ui/home.dart';
 import 'package:td2_flutter/mytheme.dart';
 import 'package:td2_flutter/repository/settingsmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:td2_flutter/repository/taskviewmodel.dart';
 
 void main() {
   runApp(const MyTD2());
@@ -20,11 +19,6 @@ class MyTD2 extends StatelessWidget {
           SettingViewModel settingViewModel = SettingViewModel();
           return settingViewModel;
         }),
-        ChangeNotifierProvider(create: (_) {
-          TaskViewModel taskViewModel = TaskViewModel();
-          taskViewModel.generateTasks();
-          return taskViewModel;
-        })
       ],
       child: Consumer<SettingViewModel>(
         builder: (context, SettingViewModel notifier, child) {

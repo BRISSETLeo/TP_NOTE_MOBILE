@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:td2_flutter/repository/settingsmodel.dart';
-import 'dart:math';
 import 'package:td2_flutter/ui/home.dart';
+import 'dart:math';
 
 class Ecran3 extends StatefulWidget {
   const Ecran3({super.key});
@@ -10,6 +10,13 @@ class Ecran3 extends StatefulWidget {
   @override
   // ignore: library_private_types_in_public_api
   EcranBoard createState() => EcranBoard();
+}
+
+class Move {
+  final int row;
+  final int col;
+
+  Move(this.row, this.col);
 }
 
 class EcranBoard extends State<Ecran3> {
@@ -70,6 +77,16 @@ class _BoardState extends State<Board> {
               currentPlayer == 'X'
                   ? "Gagné (en $nbCoupsJoueForX coup(s))"
                   : "Perdu (en $nbCoupsJoueForX coup(s))");
+          if (currentPlayer == 'X') {
+            if (context.read<SettingViewModel>().niveauJeuMorpion ==
+                    context.read<SettingViewModel>().niveauMorpion &&
+                context.read<SettingViewModel>().niveauMorpion < 9) {
+              context.read<SettingViewModel>().niveauMorpion =
+                  context.read<SettingViewModel>().niveauMorpion + 1;
+              context.read<SettingViewModel>().niveauJeuMorpion =
+                  context.read<SettingViewModel>().niveauMorpion;
+            }
+          }
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -128,76 +145,141 @@ class _BoardState extends State<Board> {
         } else {
           currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
           if (currentPlayer == 'O') {
-            playAI();
+            playAI(context.read<SettingViewModel>().niveauJeuMorpion);
           }
         }
       });
     }
   }
 
-  void playAI() {
-    int bestScore = -9999;
-    int moveRow = -1;
-    int moveCol = -1;
+  // ignore: constant_identifier_names
+  static const int INFINITY = 1000;
+
+  void playAI(int depth) {
+    List<Move> availableMoves = [];
+
+    // Trouver toutes les cases vides
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
         if (grid[i][j] == '') {
-          grid[i][j] = 'O';
-          int score = minimax(grid, 0, -9999, 9999, false);
-          grid[i][j] = '';
-          if (score > bestScore) {
-            bestScore = score;
-            moveRow = i;
-            moveCol = j;
-          }
+          availableMoves.add(Move(i, j));
         }
       }
     }
-    tapped(moveRow, moveCol);
+
+    // Utiliser Minimax pour choisir le meilleur coup parmi les cases vides disponibles
+    if (availableMoves.isNotEmpty) {
+      int bestScore = -INFINITY;
+      Move bestMove = availableMoves[0];
+      for (Move move in availableMoves) {
+        grid[move.row][move.col] = 'O'; // Simulation du coup de l'IA
+        int score = minimax(grid, depth, false);
+        grid[move.row][move.col] = ''; // Annuler le coup
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestMove = move;
+        }
+      }
+
+      tapped(bestMove.row, bestMove.col); // Jouer le meilleur coup
+    }
   }
 
-  int minimax(List<List<String>> grid, int depth, int alpha, int beta,
-      bool isMaximizing) {
-    if (checkWinner()) {
-      return (isMaximizing) ? -10 + depth : 10 - depth;
-    } else if (!grid.any((row) => row.contains(''))) {
+  int minimax(List<List<String>> grid, int depth, bool isMaximizing) {
+    // Vérifier si le jeu est terminé ou s'il y a match nul
+    int score = evaluate(grid);
+    if (score == 10) {
+      return score;
+    }
+    if (score == -10) {
+      return score;
+    }
+    if (!isMovesLeft(grid) || depth == 0) {
+      // Vérifier la profondeur maximale
       return 0;
     }
+
+    // Maximiser le score pour l'IA
     if (isMaximizing) {
-      int bestScore = -9999;
+      int bestScore = -INFINITY;
       for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
           if (grid[i][j] == '') {
             grid[i][j] = 'O';
-            int score = minimax(grid, depth + 1, alpha, beta, false);
+            bestScore = max(
+                bestScore,
+                minimax(
+                    grid, depth - 1, !isMaximizing)); // Réduire la profondeur
             grid[i][j] = '';
-            bestScore = max(score, bestScore);
-            alpha = max(alpha, bestScore);
-            if (beta <= alpha) {
-              break;
-            }
-          }
-        }
-      }
-      return bestScore;
-    } else {
-      int bestScore = 9999;
-      for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-          if (grid[i][j] == '') {
-            grid[i][j] = 'X';
-            int score = minimax(grid, depth + 1, alpha, beta, true);
-            grid[i][j] = '';
-            bestScore = min(score, bestScore);
-            beta = min(beta, bestScore);
-            if (beta <= alpha) {
-              break;
-            }
           }
         }
       }
       return bestScore;
     }
+    // Minimiser le score pour le joueur
+    else {
+      int bestScore = INFINITY;
+      for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+          if (grid[i][j] == '') {
+            grid[i][j] = 'X';
+            bestScore = min(
+                bestScore,
+                minimax(
+                    grid, depth - 1, !isMaximizing)); // Réduire la profondeur
+            grid[i][j] = '';
+          }
+        }
+      }
+      return bestScore;
+    }
+  }
+
+  bool isMovesLeft(List<List<String>> grid) {
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (grid[i][j] == '') {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  int evaluate(grid) {
+    // Check rows
+    for (int i = 0; i < 3; i++) {
+      if (grid[i][0] == 'O' && grid[i][1] == 'O' && grid[i][2] == 'O') {
+        return 10;
+      }
+      if (grid[i][0] == 'X' && grid[i][1] == 'X' && grid[i][2] == 'X') {
+        return -10;
+      }
+    }
+    // Check columns
+    for (int i = 0; i < 3; i++) {
+      if (grid[0][i] == 'O' && grid[1][i] == 'O' && grid[2][i] == 'O') {
+        return 10;
+      }
+      if (grid[0][i] == 'X' && grid[1][i] == 'X' && grid[2][i] == 'X') {
+        return -10;
+      }
+    }
+    // Check diagonals
+    if (grid[0][0] == 'O' && grid[1][1] == 'O' && grid[2][2] == 'O') {
+      return 10;
+    }
+    if (grid[0][0] == 'X' && grid[1][1] == 'X' && grid[2][2] == 'X') {
+      return -10;
+    }
+    if (grid[0][2] == 'O' && grid[1][1] == 'O' && grid[2][0] == 'O') {
+      return 10;
+    }
+    if (grid[0][2] == 'X' && grid[1][1] == 'X' && grid[2][0] == 'X') {
+      return -10;
+    }
+    return 0;
   }
 
   bool checkWinner() {
