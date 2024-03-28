@@ -5,10 +5,10 @@ class SettingViewModel extends ChangeNotifier {
   late bool _isDark;
   late String _pseudo;
   late List _score;
-  late int _niveauMorpion = 1;
-  late int _niveauJeuMorpion = 1;
-  late int _niveauPuissance4 = 1;
-  late int _niveauJeuPuissance4 = 1;
+  late int _niveauMorpion;
+  late int _niveauJeuMorpion;
+  late int _niveauPuissance4;
+  late int _niveauJeuPuissance4;
   late SettingRepository _settingRepository;
   bool get isDark => _isDark;
   String get pseudos => _pseudo;
@@ -60,6 +60,7 @@ class SettingViewModel extends ChangeNotifier {
 
   set niveauMorpion(int value) {
     _niveauMorpion = value;
+    _settingRepository.saveSettingsLevelMorpion(value);
     notifyListeners();
   }
 
@@ -91,6 +92,10 @@ class SettingViewModel extends ChangeNotifier {
 
   getSettingsNiveauJeuMorpion() async {
     _niveauJeuMorpion = await _settingRepository.getSettingsLevelJeuMorpion();
+    if (_niveauJeuMorpion > _niveauMorpion) {
+      _niveauJeuMorpion = _niveauMorpion;
+      _settingRepository.saveSettingsLevelJeuMorpion(_niveauJeuMorpion);
+    }
     notifyListeners();
   }
 
@@ -102,11 +107,16 @@ class SettingViewModel extends ChangeNotifier {
   getSettingsNiveauJeuPuissance4() async {
     _niveauJeuPuissance4 =
         await _settingRepository.getSettingsLevelJeuPuissance4();
+    if (_niveauJeuPuissance4 > _niveauPuissance4) {
+      _niveauJeuPuissance4 = _niveauPuissance4;
+      _settingRepository.saveSettingsLevelJeuPuissance4(_niveauJeuPuissance4);
+    }
     notifyListeners();
   }
 
   set niveauPuissance4(int value) {
     _niveauPuissance4 = value;
+    _settingRepository.saveSettingsLevelPuissance4(value);
     notifyListeners();
   }
 

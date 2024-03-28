@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:td2_flutter/repository/settingsmodel.dart';
-import 'package:td2_flutter/ui/home.dart';
+import 'package:td2_flutter/ui/games.dart';
 import 'dart:math';
 
-class Ecran3 extends StatefulWidget {
-  const Ecran3({super.key});
+class Morpion extends StatefulWidget {
+  const Morpion({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -19,7 +19,7 @@ class Move {
   Move(this.row, this.col);
 }
 
-class EcranBoard extends State<Ecran3> {
+class EcranBoard extends State<Morpion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,14 +73,14 @@ class _BoardState extends State<Board> {
           }
           context.read<SettingViewModel>().addScore(
               context.read<SettingViewModel>().pseudos,
-              "Morpion",
+              "Morpion - Niveau ${context.read<SettingViewModel>().niveauJeuMorpion}",
               currentPlayer == 'X'
                   ? "Gagné (en $nbCoupsJoueForX coup(s))"
                   : "Perdu (en $nbCoupsJoueForX coup(s))");
           if (currentPlayer == 'X') {
             if (context.read<SettingViewModel>().niveauJeuMorpion ==
                     context.read<SettingViewModel>().niveauMorpion &&
-                context.read<SettingViewModel>().niveauMorpion < 9) {
+                context.read<SettingViewModel>().niveauMorpion < 6) {
               context.read<SettingViewModel>().niveauMorpion =
                   context.read<SettingViewModel>().niveauMorpion + 1;
               context.read<SettingViewModel>().niveauJeuMorpion =
@@ -103,10 +103,8 @@ class _BoardState extends State<Board> {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Home()),
-                        (route) => false);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Games()));
                   },
                   child: const Text('Retour'),
                 )
@@ -115,7 +113,9 @@ class _BoardState extends State<Board> {
           );
         } else if (!grid.any((row) => row.contains(''))) {
           context.read<SettingViewModel>().addScore(
-              context.read<SettingViewModel>().pseudos, "Morpion", "Egalité");
+              context.read<SettingViewModel>().pseudos,
+              "Morpion - Niveau ${context.read<SettingViewModel>().niveauJeuMorpion}",
+              "Egalité");
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -132,10 +132,8 @@ class _BoardState extends State<Board> {
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => const Home()),
-                        (route) => false);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Games()));
                   },
                   child: const Text('Retour'),
                 )

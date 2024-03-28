@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:td2_flutter/repository/settingsmodel.dart';
-import 'package:td2_flutter/ui/card3.dart';
-import 'package:td2_flutter/ui/card4.dart';
+import 'package:td2_flutter/ui/morpion.dart';
+import 'package:td2_flutter/ui/niveaux.dart';
+import 'package:td2_flutter/ui/puissance4.dart';
+import 'package:td2_flutter/ui/home.dart';
 
-class Ecran2 extends StatelessWidget {
-  const Ecran2({super.key});
+class Games extends StatelessWidget {
+  const Games({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Démarrer une partie'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const Home()),
+              (route) => false,
+            );
+          },
+        ),
       ),
       body: const Padding(
         padding: EdgeInsets.all(16.0),
@@ -71,28 +83,42 @@ class _FormWidgetState extends State<FormWidget> {
                 _submit();
               }
             },
-            child: const Text('Commencer la partie'),
+            child: Center(
+              child: Text(
+                "Lancer une partie de Morpion \n Niveau: $niveauJeuMorpion",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.lightBlue,
+            ),
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                _submit2();
+              }
+            },
+            child: Center(
+              child: Text(
+                "Lancer une partie de puissance 4 \n Niveau: $niveauJeuPuissance4",
+                textAlign: TextAlign.center,
+              ),
+            ),
           ),
           const SizedBox(height: 20),
           Center(
             child: ElevatedButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Ecran4()));
+                    MaterialPageRoute(builder: (context) => const Niveaux()));
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
               ),
               child: const Text('Niveaux', style: TextStyle(fontSize: 30)),
             ),
-          ),
-          Text(
-            "Niveau choisi pour le morpion: $niveauJeuMorpion",
-            style: const TextStyle(fontSize: 20),
-          ),
-          Text(
-            "Niveau choisi pour le puissance 4: $niveauJeuPuissance4",
-            style: const TextStyle(fontSize: 20),
           ),
         ],
       ),
@@ -104,7 +130,17 @@ class _FormWidgetState extends State<FormWidget> {
       context.read<SettingViewModel>().pseudo = _pseudo;
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const Ecran3()),
+        MaterialPageRoute(builder: (context) => const Morpion()),
+      );
+    }
+  }
+
+  void _submit2() {
+    if (_formKey.currentState!.validate()) {
+      context.read<SettingViewModel>().pseudo = _pseudo;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Puissance4()),
       );
     }
   }

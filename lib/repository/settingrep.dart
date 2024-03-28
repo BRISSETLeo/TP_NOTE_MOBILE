@@ -28,10 +28,9 @@ class SettingRepository {
 
   saveSettingsScore(String pseudo, String score, String level) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setStringList(SCORE_KEY, [
-      "$pseudo:$score:$level",
-      ...sharedPreferences.getStringList("score") ?? []
-    ]);
+    List<String> scores = sharedPreferences.getStringList(SCORE_KEY) ?? [];
+    scores.add("$pseudo:$score:$level");
+    sharedPreferences.setStringList(SCORE_KEY, scores);
   }
 
   clearSettingsScore() async {

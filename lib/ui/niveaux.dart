@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:td2_flutter/repository/settingsmodel.dart';
-import 'package:td2_flutter/ui/card2.dart';
+import 'package:td2_flutter/ui/games.dart';
 
-class Ecran4 extends StatelessWidget {
-  const Ecran4({super.key});
+class Niveaux extends StatelessWidget {
+  const Niveaux({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Démarrer une partie'),
+        title: const Text('Choix des niveaux'),
       ),
       body: const Padding(
         padding: EdgeInsets.all(16.0),
@@ -50,9 +50,11 @@ class _FormWidgetState extends State<FormWidget> {
             children: [
               Wrap(
                 children: List.generate(
-                  3,
+                  6,
                   (index) => buildLevelItem(
-                      index, context.read<SettingViewModel>().niveauMorpion),
+                      index,
+                      context.read<SettingViewModel>().niveauMorpion,
+                      "Morpion"),
                 ),
               ),
             ],
@@ -69,9 +71,11 @@ class _FormWidgetState extends State<FormWidget> {
             children: [
               Wrap(
                 children: List.generate(
-                  20,
+                  6,
                   (index) => buildLevelItem(
-                      index, context.read<SettingViewModel>().niveauPuissance4),
+                      index,
+                      context.read<SettingViewModel>().niveauPuissance4,
+                      "Puissance4"),
                 ),
               ),
             ],
@@ -81,15 +85,19 @@ class _FormWidgetState extends State<FormWidget> {
     );
   }
 
-  Widget buildLevelItem(int index, int niveau) {
+  Widget buildLevelItem(int index, int niveau, String jeu) {
     return GestureDetector(
       onTap: () {
-        if (index <= niveau) {
-          context.read<SettingViewModel>().niveauJeuMorpion = index + 1;
+        if (index < niveau) {
+          if (jeu == "Morpion") {
+            context.read<SettingViewModel>().niveauJeuMorpion = index + 1;
+          } else {
+            context.read<SettingViewModel>().niveauJeuPuissance4 = index + 1;
+          }
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const Ecran2(),
+              builder: (context) => const Games(),
             ),
           );
         }
@@ -120,7 +128,9 @@ class _FormWidgetState extends State<FormWidget> {
                 index < context.read<SettingViewModel>().niveauMorpion
                     ? Icons.lock_open
                     : Icons.lock,
-                color: Colors.white,
+                color: context.read<SettingViewModel>().isDark
+                    ? Colors.white
+                    : Colors.black,
               ),
             ),
           ],

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:td2_flutter/ui/card2.dart';
+import 'package:td2_flutter/ui/games.dart';
 import 'package:td2_flutter/ui/voirscore.dart';
 
-class Ecran1 extends StatelessWidget {
-  const Ecran1({super.key});
+class Accueil extends StatelessWidget {
+  const Accueil({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class Ecran1 extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Ecran2()));
+                    MaterialPageRoute(builder: (context) => const Games()));
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
