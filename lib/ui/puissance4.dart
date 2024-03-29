@@ -238,6 +238,33 @@ class _Puissance4BoardState extends State<Puissance4Board> {
           context.read<SettingViewModel>().pseudos,
           "Puissance 4 - Niveau ${context.read<SettingViewModel>().niveauJeuPuissance4}",
           "Egalité");
+      setState(() {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Egalité'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    initializeGame();
+                  },
+                  child: const Text('Rejouer'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const Games()));
+                  },
+                  child: const Text('Retour'),
+                ),
+              ],
+            );
+          },
+        );
+      });
     }
   }
 

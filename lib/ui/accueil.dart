@@ -10,8 +10,28 @@ class Accueil extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/mydata/puissance4.png',
+                    width: 100,
+                    height: 100,
+                  ),
+                  Image.asset(
+                    'assets/mydata/icone.png',
+                    width: 100,
+                    height: 100,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(context,
@@ -22,6 +42,9 @@ class Accueil extends StatelessWidget {
               ),
               child: const Text('Démarrer une partie',
                   style: TextStyle(fontSize: 25)),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             ElevatedButton(
               onPressed: () {
@@ -35,6 +58,9 @@ class Accueil extends StatelessWidget {
               ),
               child:
                   const Text('Voir mes scores', style: TextStyle(fontSize: 25)),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             ElevatedButton(
               onPressed: () {},

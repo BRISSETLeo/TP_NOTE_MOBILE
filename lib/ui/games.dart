@@ -73,52 +73,71 @@ class _FormWidgetState extends State<FormWidget> {
             },
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.lightBlue,
-            ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _submit();
-              }
-            },
-            child: Center(
-              child: Text(
-                "Lancer une partie de Morpion \n Niveau: $niveauJeuMorpion",
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.lightBlue,
-            ),
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _submit2();
-              }
-            },
-            child: Center(
-              child: Text(
-                "Lancer une partie de puissance 4 \n Niveau: $niveauJeuPuissance4",
-                textAlign: TextAlign.center,
-              ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Niveaux()));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  child: const Center(
+                      child: Text('Niveaux', style: TextStyle(fontSize: 30))),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 20),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Niveaux()));
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(16),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.lightBlue,
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _submit();
+                    }
+                  },
+                  child: Center(
+                    child: Text(
+                      "Morpion \n Niveau: $niveauJeuMorpion",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
               ),
-              child: const Text('Niveaux', style: TextStyle(fontSize: 30)),
-            ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.lightBlue,
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _submit2();
+                    }
+                  },
+                  child: Center(
+                    child: Text(
+                      "Puissance 4 \n Niveau: $niveauJeuPuissance4",
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
