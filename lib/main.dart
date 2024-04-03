@@ -24,7 +24,7 @@ class MyTD2 extends StatelessWidget {
         builder: (context, SettingViewModel notifier, child) {
           return MaterialApp(
               theme: notifier.isDark ? MyTheme.dark() : MyTheme.light(),
-              title: 'TD2',
+              title: 'TP MOBILE',
               home: const Home());
         },
       ),

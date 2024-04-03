@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:td2_flutter/ui/explicationregle.dart';
 import 'package:td2_flutter/ui/games.dart';
 import 'package:td2_flutter/ui/voirscore.dart';
 
@@ -63,7 +64,12 @@ class Accueil extends StatelessWidget {
               height: 20,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ExplicationRegle()));
+              },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
               ),
